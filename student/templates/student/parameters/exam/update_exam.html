@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+İmtahan redakte
+{% endblock %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>ŞAGİRD CƏDVƏLİ</span></a></li>
+        <li class="breadcrumb-item"><a href="{% url 'student:exam_list' %}"><span>İMTAHAN CƏDVƏLİ</span></a>
+        </li>
+        <li class="breadcrumb-item text-secondary"><span>İMTAHAN REDAKTE</span></li>
+    </ol>
+    <h2 class="text-center">İmtahan redakte</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="d-flex flex-column">
+                    <label class="form-label" for="{{ form.name.id_for_label }}">İmtahanın adı
+                        {{ form.name }}
+                        <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                    </label>
+                    <label class="form-label" for="{{ form.price.id_for_label }}">Qiymət
+                        {{ form.price }}
+                    </label>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-success btn-sm" type="submit">Yenilə</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

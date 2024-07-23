@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Tədris ili redakte
+{% endblock %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>ŞAGİRD CƏDVƏLİ</span></a></li>
+        <li class="breadcrumb-item"><a href="{% url 'student:year_list' %}"><span>TƏDRİS İLİ CƏDVƏLİ</span></a></li>
+        <li class="breadcrumb-item text-secondary"><span>TƏDRİS İLİ REDAKTE</span></li>
+    </ol>
+    <h2 class="text-center">Tədris ili redakte</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="d-flex flex-column">
+                    <label class="form-label" for="{{ form.year.id_for_label }}">Tədris ili
+                        {{ form.year }}
+                        <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                    </label>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-success btn-sm" type="submit">Yenilə</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Təkrar qeydiyyat{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Təkrar qeydiyyat</h1>
+    <form method="get">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label" for="first_name">Ad</label>
+            <input class="form-control" type="text" name="first_name" id="first_name" value="{{ form.first_name.value }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="last_name">Soyad</label>
+            <input class="form-control" type="text" name="last_name" id="last_name" value="{{ form.last_name.value }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="work_number">İş nömrəsi</label>
+            <input class="form-control" type="text" name="work_number" id="work_number" value="{{ form.work_number.value }}">
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Axtar</button>
+    </form>
+    {% if students %}
+    <h2 class="mt-3">Tapılan şagirdlər</h2>
+    <ul class="list-group mt-3">
+        {% for student in students %}
+        <li class="list-group-item">
+            <a class="btn btn-sm btn-success" href="{% url 'student:repeat_registration_create' student.id %}">{{ student.first_name }} {{ student.last_name }} ({{ student.work_number }})</a>
+        </li>
+        {% endfor %}
+        {% else %}
+        <li class="list-group-item text-center text-danger">Axtarışınıza uyğun şagird tapılmadı</li>
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

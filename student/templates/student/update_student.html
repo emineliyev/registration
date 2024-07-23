@@ -1,0 +1,482 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Yeni şagird
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <ul class="nav nav-tabs nav-fill text-nowrap" role="tablist">
+                    <li class="nav-item me-2" role="presentation">
+                        <a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1"><i class="fas fa-info-circle text-primary"></i> Şagird məlumatları</a>
+                    </li>
+                    <li class="nav-item me-2" role="presentation">
+                        <a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-2"><i class="fas fa-users text-primary"></i> Ailə məlumatları</a>
+                    </li>
+                    <li class="nav-item me-2" role="presentation">
+                        <a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-3"><i class="fas fa-user-tie text-primary"></i> Məsul şəxs</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-4"><i class="fas fa-money-bill text-primary"></i> Ödəniş məlumatları</a>
+                    </li>
+                </ul>
+                <form action="" method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active mt-5" role="tabpanel">
+                            <div class="row mb-3">
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.first_name.id_for_label }}">Ad</label>
+                                    {{ form.first_name }}
+                                    <div class="invalid-feedback">
+                                        Bu sahə vacibdir!
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.last_name.id_for_label }}">Soyad</label>
+                                    {{ form.last_name }}
+                                    <div class="invalid-feedback">
+                                        Bu sahə vacibdir!
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.student_class.id_for_label }}">Sinif</label>
+                                    {{ form.student_class }}
+                                    <div class="invalid-feedback">Sinif seçin!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.group.id_for_label }}">Qrup</label>
+                                    {{ form.group }}
+                                    <div class="invalid-feedback">Qrup seçin!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.section.id_for_label }}">Bölmə</label>
+                                    {{ form.section }}
+                                    <div class="invalid-feedback">Bölmə seçin!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.shift.id_for_label }}">Növbə</label>
+                                    {{ form.shift }}
+                                    <div class="invalid-feedback">Bölmə seçin!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.gender.id_for_label }}">Cinsi</label>
+                                    {{ form.gender }}
+                                    <div class="invalid-feedback">Cinsiyyət seçin!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.score.id_for_label }}">Qəbul balı</label>
+                                    {{ form.score }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.class_number.id_for_label }}">Sinif kodu</label>
+                                    {{ form.class_number }}
+                                    <div class="invalid-feedback">Sinif kodu seçin!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="id_subject">Fənn</label>
+                                    {{ form.subject }}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="id_exam">İmtahan</label>
+                                    {{ form.exam }}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.school.id_for_label }}">Məktəb</label>
+                                    {{ form.school }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.city.id_for_label }}">Şəhər</label>
+                                    {{ form.city }}
+                                    <div class="invalid-feedback">Şəhər seçin!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.address.id_for_label }}">Ünvan</label>
+                                    {{ form.address }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.note.id_for_label }}">Qeydiyyat statusu</label>
+                                    {{ form.note }}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.registration_status.id_for_label }}">Qeyd</label>
+                                    {{ form.registration_status }}
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="tab-2" class="tab-pane mt-5" role="tabpanel">
+                            <h3 class="mt-3 mb-3"><i class="fas fa-user-tie text-primary fa-2x text-gray-300"></i> Şagirdin atası haqqında məlumat</h3>
+                            <div class="row mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.father_first_name.id_for_label }}">Ad</label>
+                                    {{ form.father_first_name }}
+                                    <div class="invalid-feedback">
+                                        Bu sahə vacibdir!
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.father_last_name.id_for_label }}">Soyad</label>
+                                    {{ form.father_last_name }}
+                                    <div class="invalid-feedback">
+                                        Bu sahə vacibdir!
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.father_position.id_for_label }}">Vəzifə</label>
+                                    {{ form.father_position }}
+                                    <div class="invalid-feedback">Vəzifə seçin!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.father_workplace.id_for_label }}">İş yeri</label>
+                                    {{ form.father_workplace }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.father_phone_1.id_for_label }}">Telefon
+                                        1</label>
+                                    {{ form.father_phone_1 }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.father_phone_2.id_for_label }}">Telefon
+                                        2</label>
+                                    {{ form.father_phone_2 }}
+                                </div>
+                            </div>
+
+                            <h3 class="mt-3"><i class="fas fa fa-female text-primary fa-2x text-gray-300"></i> Şagirdin anası haqqında məlumat</h3>
+                            <div class="row mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.mather_first_name.id_for_label }}">Ad</label>
+                                    {{ form.mather_first_name }}
+                                    <div class="invalid-feedback">
+                                        Bu sahə vacibdir!
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.mather_last_name.id_for_label }}">Soyad</label>
+                                    {{ form.mather_last_name }}
+                                    <div class="invalid-feedback">
+                                        Bu sahə vacibdir!
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.mather_position.id_for_label }}">Vəzifə</label>
+                                    {{ form.mather_position }}
+                                    <div class="invalid-feedback">Sinif kodu seçin!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.mather_workplace.id_for_label }}">İş
+                                        yeri</label>
+                                    {{ form.mather_workplace }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.mather_phone_1.id_for_label }}">Telefon
+                                        1</label>
+                                    {{ form.mather_phone_1 }}
+                                    <div class="invalid-feedback">Fənn seçin!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.mather_phone_2.id_for_label }}">Telefon
+                                        2</label>
+                                    {{ form.mather_phone_2 }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-3" class="tab-pane mt-5" role="tabpanel">
+                            <div class="row mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.responsible_first_name.id_for_label }}">Ad</label>
+                                    {{ form.responsible_first_name }}
+                                    <div class="invalid-feedback">
+                                        Bu sahə vacibdir!
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.responsible_last_name.id_for_label }}">Soyad</label>
+                                    {{ form.responsible_last_name }}
+                                    <div class="invalid-feedback">
+                                        Bu sahə vacibdir!
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.responsible_sur_name.id_for_label }}">Ata adı
+                                    </label>
+                                    {{ form.responsible_sur_name }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.responsible_passport_number.id_for_label }}">Vəsiqə
+                                        nömrəsi</label>
+                                    {{ form.responsible_passport_number }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.responsible_fin.id_for_label }}">FİN</label>
+                                    {{ form.responsible_fin }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.responsible_address.id_for_label }}">Ünvan</label>
+                                    {{ form.responsible_address }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.proximity.id_for_label }}">Yaxınlığı</label>
+                                    {{ form.proximity }}
+                                    <div class="invalid-feedback">Yaxınlıq seçin!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.responsible_position.id_for_label }}">Vəzifə</label>
+                                    {{ form.responsible_position }}
+                                    <div class="invalid-feedback">Vəzifə seçin!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.responsible_workplace.id_for_label }}">İş
+                                        yeri</label>
+                                    {{ form.responsible_workplace }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.responsible_phone_1.id_for_label }}">Telefon
+                                        1</label>
+                                    {{ form.responsible_phone_1 }}
+                                    <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.responsible_phone_2.id_for_label }}">Telefon
+                                        2</label>
+                                    {{ form.responsible_phone_2 }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-4" class="tab-pane" role="tabpanel">
+                            <label class="form-label mt-5">Hesablanmış təhsil haqqı ₼
+                                <input id="total_fee" class="form-control" type="number" readonly/>
+                            </label>
+                            <div class="table-responsive text-nowrap text-center">
+                                <table class="table table-striped table-hover table-bordered">
+                                    <caption class="text-end">
+                                    <label class="form-label text-danger">Güzəşt məbləği ₼
+                                        <input id="total_concession" placeholder="{{ student.total_concession }}" class="form-control" type="number" disabled />
+                                    </label>
+                                        <br>
+                                        <label class="form-label text-success" for="{{ form.annual_fee.id_for_label }}">İllik təhsil haqqı ₼
+                                            {{ form.annual_fee }}
+                                            <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                                        </label>
+                                    </caption>
+                                    <thead>
+                                    <tr>
+                                        <th>Güzəşt</th>
+                                        <th>Güzəşt adı</th>
+                                        <th>Güzəşt %</th>
+                                        <th>Güzəşt ₼</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Güzəşt 1</td>
+                                        <td>
+                                            <label class="form-label" id="{{ form.concession_1.id_for_label }}">
+                                                {{ form.concession_1 }}
+                                            </label>
+                                        </td>
+                                        <td>
+                                        <label class="form-label" for="{{ form.concession_1_percent.id_for_label }}">
+                                            {{ form.concession_1_percent }}
+                                        </label>
+                                        </td>
+                                        <td>
+                                        <label class="form-label" for="{{ form.concession_1_price.id_for_label }}">
+                                            {{ form.concession_1_price }}
+                                        </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Güzəşt 2</td>
+                                        <td>
+                                            <label class="form-label" id="{{ form.concession_2.id_for_label }}">
+                                                {{ form.concession_2 }}
+                                            </label>
+                                        </td>
+                                        <td>
+                                        <label class="form-label" for="{{ form.concession_2_percent.id_for_label }}">
+                                            {{ form.concession_2_percent }}
+                                        </label>
+                                        </td>
+                                        <td>
+                                        <label class="form-label" for="{{ form.concession_2_price.id_for_label }}">
+                                            {{ form.concession_2_price }}
+                                        </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Güzəşt 2</td>
+                                        <td>
+                                            <label class="form-label" id="{{ form.concession_3.id_for_label }}">
+                                                {{ form.concession_3 }}
+                                            </label>
+                                        </td>
+                                        <td>
+                                        <label class="form-label" for="{{ form.concession_3_percent.id_for_label }}">
+                                            {{ form.concession_3_percent }}
+                                        </label>
+                                        </td>
+                                        <td>
+                                        <label class="form-label" for="{{ form.concession_3_price.id_for_label }}">
+                                            {{ form.concession_3_price }}
+                                        </label>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-success btn-sm">Yenilə</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    var originalAnnualFee = parseFloat($('#id_annual_fee').val()) || 0;
+
+    function calculateFee() {
+        var studentClass = $('#id_student_class').val();
+        var group = $('#id_group').val();
+        var subjects = $('#id_subject').val() || [];
+        var exams = $('#id_exam').val() || [];
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "student:calculate_fee" %}',
+            data: {
+                'student_class': studentClass,
+                'group': group,
+                'subject[]': subjects,
+                'exam[]': exams,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            traditional: true,
+            success: function(response) {
+                $('#total_fee').val(response.total_fee);
+                $('#id_annual_fee').val(response.total_fee);
+                originalAnnualFee = parseFloat(response.total_fee) || 0;
+                updateConcessions();
+            }
+        });
+    }
+
+    function updateConcessions() {
+        var annualFee = originalAnnualFee;
+        var concession1Price = parseFloat($('#id_concession_1_price').val()) || 0;
+        var concession2Price = parseFloat($('#id_concession_2_price').val()) || 0;
+        var concession3Price = parseFloat($('#id_concession_3_price').val()) || 0;
+
+        var totalConcessions = concession1Price + concession2Price + concession3Price;
+        var updatedAnnualFee = annualFee - totalConcessions;
+        $('#id_annual_fee').val(updatedAnnualFee);
+
+        $('#total_concession').val(totalConcessions);
+    }
+
+    function updatePercentFields() {
+        var annualFee = originalAnnualFee;
+        var concession1Price = parseFloat($('#id_concession_1_price').val()) || 0;
+        var concession2Price = parseFloat($('#id_concession_2_price').val()) || 0;
+        var concession3Price = parseFloat($('#id_concession_3_price').val()) || 0;
+
+        if ($('#id_concession_1_price').val() !== '') {
+            $('#concession_1_percent').val(((concession1Price / annualFee) * 100).toFixed(2));
+        }
+        if ($('#id_concession_2_price').val() !== '') {
+            $('#concession_2_percent').val(((concession2Price / annualFee) * 100).toFixed(2));
+        }
+        if ($('#id_concession_3_price').val() !== '') {
+            $('#concession_3_percent').val(((concession3Price / annualFee) * 100).toFixed(2));
+        }
+    }
+
+    function updatePriceFields() {
+        var annualFee = originalAnnualFee;
+        var concession1Percent = parseFloat($('#concession_1_percent').val()) || 0;
+        var concession2Percent = parseFloat($('#concession_2_percent').val()) || 0;
+        var concession3Percent = parseFloat($('#concession_3_percent').val()) || 0;
+
+        if ($('#concession_1_percent').val() !== '') {
+            var concession1Price = (concession1Percent / 100) * annualFee;
+            $('#id_concession_1_price').val(concession1Price.toFixed(2));
+        }
+        if ($('#concession_2_percent').val() !== '') {
+            var concession2Price = (concession2Percent / 100) * annualFee;
+            $('#id_concession_2_price').val(concession2Price.toFixed(2));
+        }
+        if ($('#concession_3_percent').val() !== '') {
+            var concession3Price = (concession3Percent / 100) * annualFee;
+            $('#id_concession_3_price').val(concession3Price.toFixed(2));
+        }
+
+        updateConcessions();
+    }
+
+    $('#id_concession_1_price, #id_concession_2_price, #id_concession_3_price').on('input', function() {
+        updateConcessions();
+        updatePercentFields();
+    });
+
+    $('#concession_1_percent, #concession_2_percent, #concession_3_percent').on('input', function() {
+        updatePriceFields();
+    });
+
+    $('#id_student_class, #id_group, #id_subject, #id_exam').change(calculateFee);
+});
+
+$(document).ready(function() {
+    $('#id_subject').select2({
+        width: '100%'
+    });
+    $('#id_exam').select2({
+        width: '100%'
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+.fa-exclamation-triangle {
+    font-size: 40px;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #f5f5f5;
+}
+
+.navbar {
+    background-color: #ffff;
+}
+
+.nav-link {
+    font-size: 1.2rem;
+    font-weight: normal;
+}
+
+.navbar-nav .nav-link.active {
+    color: #008cba;
+}
+
+#NewStudent {
+    z-index: 9999;
+}
+
+.receipt-container {
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #004080;
+}
+
+.list-group-item {
+    font-size: 0.9rem;
+}
+
+.mb-minus {
+    margin-top: -3px;
+}
+
+
+/*OFCANVAS*/
+.dropdown-menu-custom {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item-custom {
+    color: #343a40;
+    padding: 10px 20px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-item-custom:hover {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.menu-section-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+/*BUDJET*/
+ .budget-display {
+    display: inline-flex;
+    align-items: center;
+    background-color: #28a745;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  .budget-display i {
+    margin-right: 8px;
+  }

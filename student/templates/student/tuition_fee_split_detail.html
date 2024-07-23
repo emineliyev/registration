@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% block title %}
+Ödəniş cədvəli
+{% endblock %}
+{% block content %}
+{% include 'accounting/inc/_messages.html' %}
+<div class="container mt-4">
+        <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>ŞAGİRD CƏDVƏLİ</span></a></li>
+        <li class="breadcrumb-item text-secondary"><span>TAKSİT MƏLUMATLARI</span></li>
+    </ol>
+    <h2>Taksit məlumatları {{ student.first_name }} {{ student.last_name }}</h2>
+    <p>Sinif: {{ student.student_class }} - Qrup: {{ student.group }} - İş nömrəsi: {{ student.work_number }}</p>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item">İllik təhsil haqqı: <strong class="text-end">{{ annual_fee|stringformat:"0.2f" }} ₼ </strong></li>
+                <li class="list-group-item">Ödənilən məbləğ: <strong>{{ total_paid|stringformat:"0.2f" }} ₼ </strong></li>
+                <li class="list-group-item">Qalan məbləğ: <strong>{{ remaining_amount|stringformat:"0.2f" }} ₼ </strong></li>
+                <li class="list-group-item">Gecikən məbləğ: <strong>{% if overdue_amount > 0 %} {{ overdue_amount|stringformat:"0.2f" }} ₼ {% else %} 0 ₼{% endif %}</strong></li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            {% if next_payment_date and next_payment_amount is not None %}
+            <ul class="list-group">
+                <li class="list-group-item">Növbəti ödəniş tarixi: <strong>{{ next_payment_date|date:'d.m.Y' }}</strong></li>
+                <li class="list-group-item">Növbəti ödəniş məbləği: <strong>{{ next_payment_amount|stringformat:"0.2f" }} ₼</strong></li>
+            {% else %}
+            <li class="list-group-item">Növbəti ödəniş tarixi: <strong>Ödəniş bitib</strong></li>
+            <li class="list-group-item">Növbəti ödəniş məbləği: <strong>Ödəniş bitib</strong></li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+
+    <div class="row">
+    <div class="col">
+    <div class="col-md-12">
+        <div class="table-responsive text-nowrap">
+        <form method="post" action="{% url 'student:save_splits' student.id %}" id="saveSplitsForm">
+            <div class="mb-3 text-end">
+                <a href="{% url 'student:tuition_fee_schedule' student.id %}" target="_blank" class="btn btn-primary btn-sm mt-2"><i class="fa fa-list"></i> Ödəniş cədvəli</a>
+            <button type="button" class="btn btn-success btn-sm mt-2" id="addSplitRow"><i class="fas fa-plus-circle"></i> Sıra əlavə et</button>
+            <button type="submit" class="btn btn-primary btn-sm mt-2"><i class="fas fa-save"></i> Dəyişiklikləri yadda saxla</button>
+            </div>
+            {% csrf_token %}
+            <input type="hidden" name="deleted_splits" id="deletedSplits">
+            <table class="table table-hover">
+            <thead class="text-nowrap text-center text-bg-secondary">
+            <tr>
+                <th>#</th>
+                <th>Plan üzrə tarix</th>
+                <th>Plan üzrə məbləğ</th>
+                <th>Ödənilən tarix</th>
+                <th>Ödənilən məbləğ</th>
+                <th>Qalıq borc</th>
+                <th>Əməliyyatlar</th>
+            </tr>
+            </thead>
+            <tbody id="splitsTableBody" class="text-center">
+            {% for split in tuition_fee_splits %}
+            <tr data-id="{{ split.id }}">
+            {% if split.payment_date %}
+                <td class="bg-success">{{ forloop.counter }}</td>
+            {% elif split.installment_date < today %}
+                <td class="bg-danger">{{ forloop.counter }}</td>
+            {% else %}
+                <td>{{ forloop.counter }}</td>
+            {% endif %}
+                <td>
+                    {% if split.payment_date %}
+                    <input disabled type="date" name="installment_date_{{ split.id }}" value="{{ split.installment_date|date:'Y-m-d' }}" class="form-control">
+                    {% else %}
+                    <input  type="date" name="installment_date_{{ split.id }}" value="{{ split.installment_date|date:'Y-m-d' }}" class="form-control">
+                    {% endif %}
+                </td>
+                <td>
+                    {% if split.payment_date %}
+                    <input disabled type="number" name="installment_amount_{{ split.id }}" value="{{ split.installment_amount|stringformat:'0.2f' }}" step="0.01" class="form-control installment-amount" data-index="{{ forloop.counter0 }}">
+                    {% else %}
+                    <input type="number" name="installment_amount_{{ split.id }}" value="{{ split.installment_amount|stringformat:'0.2f' }}" step="0.01" class="form-control installment-amount" data-index="{{ forloop.counter0 }}">
+                    {% endif %}
+                </td>
+                {% if split.payment_date is None %}
+                <td>..../..../....</td>
+                {% else %}
+                <td>{{ split.payment_date|date:'d.m.Y' }}</td>
+                {% endif %}
+                <td>{{ split.payment_amount|stringformat:"0.2f" }} ₼</td>
+                <td>{{ split.amount_due|stringformat:"0.2f" }} ₼</td>
+                <td>
+                    {% if not split.payment_date %}
+                        {% if split.installment_date < today %}
+                            <button title="Ödə"  type="submit" class="btn btn-danger btn-sm" formaction="{% url 'student:make_payment' split.id %}"><i class="fas fa-money-check"></i></button>
+                        {% else %}
+                            <button title="Ödə"  type="submit" class="btn btn-success btn-sm" formaction="{% url 'student:make_payment' split.id %}"><i class="fas fa-money-check"></i></button>
+                        {% endif %}
+                    {% else %}
+                    <a title="Çap et" href="{% url 'student:payment_receipt' split.id %}" class="btn btn-info btn-sm"><i class="fas fa-print"></i></a>
+                    {% if split.installment_date < today %}
+                    <button disabled title="Geri ödə" type="button" class="btn btn-warning btn-sm" onclick="submitRefundForm({{ split.id }});"><i class="fas fa-redo"></i></button>
+                    {% else %}
+                    <button title="Geri ödə" type="button" class="btn btn-warning btn-sm" onclick="submitRefundForm({{ split.id }});"><i class="fas fa-redo"></i></button>
+                    {% endif %}
+                    {% endif %}
+                    {% if not split.payment_date  %}
+                    <button title="Sil" type="button" class="btn btn-danger btn-sm" onclick="removeSplitRow(this, {{ split.id }});"><i class="fas fa-trash"></i></button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </form>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<!-- Hidden form for refunding payments -->
+<form id="refundForm" method="post" style="display:none;">
+    {% csrf_token %}
+</form>
+
+<script>
+
+function submitRefundForm(splitId) {
+    const form = document.getElementById('refundForm');
+    form.action = "{% url 'student:refund_payment' 0 %}".replace('/0/', '/' + splitId + '/');
+    form.submit();
+}
+
+function removeSplitRow(button, splitId) {
+    const row = button.closest('tr');
+    row.remove();
+
+    const deletedSplits = document.getElementById('deletedSplits');
+    let deletedIds = deletedSplits.value ? deletedSplits.value.split(',') : [];
+    deletedIds.push(splitId);
+    deletedSplits.value = deletedIds.join(',');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const totalAmount = parseFloat('{{ annual_fee|stringformat:"0.2f" }}');
+    const installments = document.querySelectorAll('.installment-amount');
+
+    installments.forEach(input => {
+        input.addEventListener('input', function () {
+            const index = parseInt(this.getAttribute('data-index'));
+            let remainingAmount = totalAmount;
+
+            // Сначала вычитаем все предыдущие суммы
+            for (let i = 0; i < index; i++) {
+                remainingAmount -= parseFloat(installments[i].value);
+            }
+
+            // Вычитаем текущую измененную сумму
+            remainingAmount -= parseFloat(this.value);
+
+            // Рассчитываем на оставшиеся платежи
+            const remainingInstallments = installments.length - index - 1;
+            if (remainingInstallments > 0) {
+                const evenAmount = Math.floor(remainingAmount / remainingInstallments);
+                let remainder = remainingAmount % remainingInstallments;
+
+                // Распределить оставшуюся сумму, учитывая остаток
+                for (let i = index + 1; i < installments.length; i++) {
+                    let adjustment = remainder > 0 ? 1 : 0;
+                    installments[i].value = (evenAmount + adjustment).toFixed(2);
+                    remainder -= adjustment;
+                }
+            }
+        });
+    });
+});
+
+document.getElementById('addSplitRow').addEventListener('click', function () {
+        const tableBody = document.getElementById('splitsTableBody');
+        const newRow = document.createElement('tr');
+
+        const rowCount = tableBody.rows.length + 1;
+
+        newRow.innerHTML = `
+            <td>${rowCount}</td>
+            <td>
+                <input type="date" name="new_installment_date_${rowCount}" class="form-control">
+            </td>
+            <td>
+                <input type="number" name="new_installment_amount_${rowCount}" step="0.01" class="form-control installment-amount" data-index="${rowCount - 1}">
+            </td>
+            <td></td>
+            <td></td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeSplitRow(this, 'new_${rowCount}');"><i class="fas fa-trash"></i></button>
+            </td>
+        `;
+        tableBody.appendChild(newRow);
+
+        // Add event listener for the new input
+        newRow.querySelector('.installment-amount').addEventListener('input', function () {
+            const index = rowCount - 1;
+            let remainingAmount = totalAmount;
+
+            for (let i = 0; i < installments.length; i++) {
+                if (i < index) {
+                    remainingAmount -= parseFloat(installments[i].value);
+                }
+            }
+
+            const newAmount = parseFloat(this.value);
+            remainingAmount -= newAmount;
+
+            const remainingInstallments = installments.length - index - 1;
+            const newInstallmentAmount = (remainingAmount / remainingInstallments).toFixed(2);
+
+            // Set the amount for the next installment
+            if (remainingInstallments > 0) {
+                installments[index + 1].value = (parseFloat(newInstallmentAmount) + (remainingAmount % remainingInstallments)).toFixed(2);
+            }
+
+            // Set the amounts for the rest of the installments
+            for (let i = index + 2; i < installments.length; i++) {
+                installments[i].value = newInstallmentAmount;
+            }
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}
+Ödəniş cədvəli
+{% endblock %}
+{% block content %}
+<div class="container mt-4" id="printableArea">
+    <h2 class="text-center">TƏHSİL HAQQI ÖDƏNİŞ CƏDVƏLİ</h2>
+    <hr>
+    <div class="d-flex justify-content-between">
+        <p>{{ student.year }}</p>
+        <p class="text-end">ÇAP TARİXİ: {{ today|date:"d.m.Y" }}</p>
+    </div>
+    <p class="text-center">Şagird {{ student.first_name }} {{ student.last_name }} {{ student.father_first_name }}
+        {% if student.gender == "Man" %}
+        oğlunun
+        {% elif student.gender == "Woman" %}
+        qızının
+        {% endif %}
+        <br>
+        Təhsil haqqını aşağıdakı təqvimə uyğun olaraq ödəməyə qəbul edirəm.
+    </p>
+    <p>Sinif: {{ student.student_class }} - Qrup: {{ student.group }} - İş nömrəsi: {{ student.work_number }}</p>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover table-bordered">
+            <thead class="text-nowrap text-center text-bg-secondary">
+            <tr>
+                <th>#</th>
+                <th>Tarixlər</th>
+                <th>Hissələr</th>
+                <th>İmza</th>
+                <th>Qeyd</th>
+            </tr>
+            </thead>
+            <tbody class="text-center">
+            {% for split in tuition_fee_splits %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ split.installment_date|date:'d.m.Y' }}</td>
+                <td class="amount">{{ split.installment_amount|stringformat:"0.2f" }} AZN</td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+                <tr>
+        <td colspan="5" id="total-amount">0.00 AZN</td>
+    </tr>
+            </tbody>
+        </table>
+        <div class="text-end">
+            <p>Şagirdin valideyni</p>
+            <p>Ad Soyad: {{ student.responsible_first_name }} {{ student.responsible_last_name }}</p>
+            <br>
+            İmza:______________
+        </div>
+    </div>
+</div>
+<div class="container mb-5">
+    <button class="btn btn-warning btn-sm mt-3" data-bs-toggle="tooltip" data-bss-tooltip="" type="button"
+            onclick="printContent()"><i class="fas fa-print"></i></button>
+</div>
+
+<script>
+    // Функция для суммирования значений
+    function sumAmounts() {
+        // Получение всех элементов с классом 'amount'
+        const amounts = document.querySelectorAll('.amount');
+        let total = 0;
+
+        // Проход по всем элементам и суммирование значений
+        amounts.forEach(function (amount) {
+            // Извлечение числового значения из строки (удаление 'AZN' и преобразование в число)
+            const value = parseFloat(amount.textContent.replace('AZN', ''));
+            if (!isNaN(value)) {
+                total += value;
+            }
+        });
+
+        // Вывод общей суммы в элемент с id 'total-amount'
+        const totalAmountElement = document.getElementById('total-amount');
+        totalAmountElement.textContent = `Cəmi: ${total.toFixed(2)} AZN`;
+    }
+
+    // Вызов функции при загрузке страницы
+    window.onload = sumAmounts;
+</script>
+{% endblock %}

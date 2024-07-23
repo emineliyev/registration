@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}
+Ödəniş Qəbzi
+{% endblock %}
+{% block content %}
+<div class="container mt-4" id="printableArea">
+    <h2 class="text-center mt-5">ÖDƏNİŞ QƏBZİ</h2>
+    <div class="container mt-5">
+        <div class="receipt-container">
+        <p class="text-end">ÇAP TARİXİ: {{ today|date:"d.m.Y" }}</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between border-5"><span>İş nömrə:</span>
+                            <p class="text-start">{{ student.work_number }}</p></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Adı:</span>
+                            <p class="text-start">{{ student.first_name }}</p></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Soyad:</span>
+                            <p class="text-start">{{ student.last_name }}</p></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Ata adı:</span>
+                            <p class="text-start">{{ student.father_first_name }}</p></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Sinif:</span>
+                            <p class="text-start">{{ student.student_class }}</p></li>
+                    </ul>
+                    <p class="mt-5">Qeyd:</p>
+                    <p>___________________________________</p>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between"><span>Ödənilən məbləğ:</span>
+                            <p>{{ split.payment_amount|stringformat:"0.2f" }} ₼</p>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Cəm ödənilən məbləğ:</span>
+                            <p>{{ total_paid|stringformat:"0.2f" }} ₼</p>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Qalan məbləğ:</span>
+                            <p>{{ remaining_amount|stringformat:"0.2f" }} ₼</p></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Növbəti ödəniş tarixi:</span>
+                            {% if next_payment_date is None %}
+                            	<p>Ödəniş bitib</p>
+                            {% else %}
+                            <p>{{ next_payment_date }}</p></li>
+                            {% endif %}
+                        <li class="list-group-item d-flex justify-content-between"><span>Növbəti ödəniş miqdarı:</span>
+                            {% if next_payment_amount == 0 %}
+                            	<p>Ödəniş bitib</p>
+                            {% else %}
+                            <p>{{ next_payment_amount|stringformat:"0.2f" }} ₼</p></li>
+                        {% endif %}
+                    </ul>
+                    <div class="text-end">
+                        <p class="mt-5">Xəzinədar: {{ user.first_name }} {{ user.last_name }}</p>
+                        <p>___________________________________</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <a href="{% url 'student:tuition_fee_split_detail' student.id %}" class="btn btn-primary btn-sm mt-3" type="button">Geri
+        qayıt</a>
+    <button class="btn btn-warning btn-sm mt-3" data-bs-toggle="tooltip" data-bss-tooltip="" type="button"
+            onclick="printContent()">
+        <i class="fas fa-print"></i>
+    </button>
+</div>
+{% endblock %}

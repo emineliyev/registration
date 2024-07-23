@@ -1,0 +1,51 @@
+{% load static %}
+<nav class="navbar navbar-light navbar-expand-xl sticky-top shadow py-3 mb-5">
+
+    <div class="container">
+        <a href="{% url 'student:student_list' %}" class="me-3"><img src="{% static 'assets/img/logo/default.svg' %}" width="50" alt=""></a>
+        <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
+            <span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navcol-1">
+            <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+                <a class="nav-link {% if 'student_list' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'student:student_list' %}">Qeydiyyat</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Şagird parameterləri</a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'student:class_list' %}">Siniflər</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student:group_list' %}">Qruplar</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student:class_number_list' %}">Sinif kodları</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student:subject_list' %}">Fənlər</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student:year_list' %}">Tədris illəri</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student:exam_list' %}">İmtahanlar</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student:positions_list' %}">Vəzifələr</a></li>
+                    <li><a class="dropdown-item" href="{% url 'student:proximity_list' %}">Yaxınlıq</a></li>
+                    <li><a class="dropdown-item" href="{% url 'accounting:contract_list' %}">Müqavilələr</a></li>
+                  </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hesabatlar</a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item dropdown-item-custom mb-2" href="{% url 'student:student_report' %}">Şagirdlər üzrə hesabat</a></li>
+                    <li><a class="dropdown-item dropdown-item-custom mb-2" href="{% url 'student:daly_payments' %}">Gündəlik ödənişlər</a></li>
+                    <li><a class="dropdown-item dropdown-item-custom" href="{% url 'student:late_payments' %}">Gecikən ödənişlər</a></li>
+                  </ul>
+            </li>
+
+            </ul>
+            <div class="d-flex">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Parameterlər</button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{% url 'accounting:profile_update' %}"><i class="fas fa-user-cog"></i> Profili dəyiş</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounting:change_password' %}"><i class="fas fa-user-lock"></i> Şifrəni dəyiş</a></li>
+                        <li><a href="{% url 'accounting:logout_view' %}" class="dropdown-item btn btn-secondary btn-sm" type="button"><i class="fas fa-sign-out-alt me-2"></i>Çıxış</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

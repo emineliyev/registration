@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Sinfin silinməsi
+{% endblock %}
+{% block content %}
+<div class="container">
+    {% include 'accounting/inc/_messages.html' %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 col-sm-8">
+                <form class="shadow p-5 bg-white rounded" method="post">
+                    {% csrf_token %}
+                    <div class="text-center mb-3">
+                        <i class="fas fa-exclamation-triangle text-danger fa-2x"></i>
+                    </div>
+                    <h2 class="fw-bold text-center text-danger mb-3">XƏBƏRDARLIQ</h2>
+                    <p class="text-center mb-3">Məlumatları sildikdən sonra bərpa edə bilməyəcəksiniz!</p>
+                    <p class="text-center mb-4">Silmək istədiyinizdən əminsiniz?</p>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'student:subject_list' %}"
+                           class="btn btn-outline-secondary border rounded-0 border-secondary flex-grow-1 me-3"
+                           type="button">XEYR</a>
+                        <button class="btn btn-danger flex-grow-1" type="submit">BƏLİ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

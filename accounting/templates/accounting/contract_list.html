@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Müqavilələr{% endblock %}
+{% block content %}
+<div class="container">
+    {% include 'accounting/inc/_messages.html' %}
+    <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>ŞAGİRD CƏDVƏLİ</span></a></li>
+        <li class="breadcrumb-item text-secondary"><span>MÜQAVİLƏLƏR</span></li>
+    </ol>
+    <h2 class="text-center">Müqavilələr</h2>
+    <div class="row">
+        <div class="col"><a class="btn btn-success btn-sm mb-2" role="button"
+                            href="{% url 'accounting:upload_contract' %}">Yeni müqavilə</a></div>
+        <div class="col-md-12">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <caption>Table Caption</caption>
+                    <thead class="text-nowrap text-bg-secondary">
+                    <tr>
+                        <th>#</th>
+                        <th>
+                            <span style="font-weight: normal !important; color: rgb(33, 37, 41); background-color: var(--bs-table-bg);">Müqavilə adı</span><br>
+                        </th>
+                        <th>
+                            <span style="font-weight: normal !important; color: rgb(33, 37, 41); background-color: var(--bs-table-bg);">Sinif</span><br>
+                        </th>
+                        <th>
+                            <span style="font-weight: normal !important; color: rgb(33, 37, 41); background-color: var(--bs-table-bg);">Müqavilə</span><br>
+                        </th>
+                        <th>
+                            <span style="font-weight: normal !important; color: rgb(33, 37, 41); background-color: var(--bs-table-bg);">Yüklənən tarix</span><br>
+                        </th>
+                        <th><span
+                                style="font-weight: normal !important; color: rgb(33, 37, 41); background-color: var(--bs-table-bg);">Əməliyyatlar</span><br>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for template in templates %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ template.name }}</td>
+                        <td>{{ template.get_class_level_display }}</td>
+                        <td>{{ template.file }}</td>
+                        <td>{{ template.uploaded_at }}</td>
+                        <td class="text-end">
+                            <a href="{{ template.file.url }}"
+                               class="btn btn-primary btn-sm me-2" role="button" data-bs-toggle="tooltip"
+                               data-bss-tooltip="" title="Yüklə">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <a href="{% url 'accounting:delete_confirm_contract' template.id %}"
+                               class="btn btn-danger btn-sm me-2" role="button" data-bs-toggle="tooltip"
+                               data-bss-tooltip="" title="Sil">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Şagird cədvəli{% endblock %}
+{% block content %}
+<div class="container">
+{% include 'accounting/inc/_messages.html' %}
+    <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item text-secondary"><span>ŞAGİRD CƏDVƏLİ</span></li>
+    </ol>
+    <h2 class="text-center text-dark mb-4">Axtarış filteri</h2>
+    <div class="row mb-3">
+        <div class="col">
+            <form method="get">
+                <div class="d-flex flex-wrap">
+                    <label class="form-label flex-fill me-2">Tədris ili
+                        <select class="form-select" name="year">
+                        {% for year in years %}
+                        <option value="{{ year.id }}" {% if request_GET.year == year.id|stringformat:"s" %}selected{% endif %}>{{ year.year }}</option>
+                        {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">İş nömrə
+                        <input class="form-control" type="number" name="work_number__icontains"
+                               value="{{ request.GET.work_number__icontains }}">
+                    </label>
+                    <label class="form-label flex-fill me-2">Ad
+                        <input class="form-control" type="text" name="first_name__icontains"
+                               value="{{ request.GET.first_name__icontains }}">
+                    </label>
+                    <label class="form-label flex-fill me-2">Soyad
+                        <input class="form-control" type="text" name="last_name__icontains"
+                               value="{{ request.GET.last_name__icontains }}">
+                    </label>
+                    <label class="form-label flex-fill me-2">Cins
+                        <select class="form-select" name="gender">
+                            <option value="">---------</option>
+                            {% for gender in genders %}
+                            <option value="{{ gender.0 }}" {% if request.GET.gender == gender.0 %}selected{% endif %}>
+                                {{ gender.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">Növbə
+                        <select class="form-select" name="shift">
+                            <option value="">---------</option>
+                            {% for shift in shifts %}
+                            <option value="{{ shift.0 }}" {% if request.GET.shift == shift.0 %}selected{% endif %}>
+                                {{ shift.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </label>
+<label class="form-label flex-fill me-2">Sinif
+        <select class="form-select" id="class" name="student_class" multiple>
+            <option value="">---------</option>
+            {% for student_class in student_classes %}
+            <option value="{{ student_class.id }}" {% if student_class.id|stringformat:"s" in request.GET.student_class %}selected{% endif %}>{{ student_class.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label class="form-label flex-fill me-2">Qrup
+        <select class="form-select" id="group" name="group" multiple>
+            <option value="">---------</option>
+            {% for group in groups %}
+            <option value="{{ group.id }}" {% if group.id|stringformat:"s" in request.GET.group %}selected{% endif %}>{{ group.name }}</option>
+            {% endfor %}
+        </select>
+</label>
+                    <label class="form-label flex-fill me-2">Sinif kodu
+                        <select class="form-control" name="class_number">
+                            <option value="">---------</option>
+                            {% for class_number in class_numbers %}
+                            <option value="{{ class_number.id }}" {% if request.GET.class_number == class_number.id|stringformat:"s" %}selected{% endif %}>{{ class_number.number }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">Bölmə
+                        <select class="form-select" name="section">
+                            <option value="">---------</option>
+                            {% for section in sections %}
+                            <option value="{{ section.0 }}" {% if request.GET.section == section.0 %}selected{% endif %}>
+                                {{ section.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">Qeydiyyat statusu
+                        <select class="form-select" name="registration_status">
+                            <option value="">---------</option>
+                            {% for status in registration_statuses %}
+                            <option value="{{ status.0 }}" {% if request.GET.registration_status == status.0 %}selected{% endif %}>{{ status.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">Qeydiyyat növü
+                        <select class="form-select" name="registration_type">
+                            <option value="">---------</option>
+                            {% for type in registration_types %}
+                            <option value="{{ type.0 }}" {% if request.GET.registration_type == type.0 %}selected{% endif %}>{{ type.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">Qeydiyyat tarixi (Başlanqıc)
+                        <input class="form-control" type="date" name="created_at__gte"
+                               value="{{ request.GET.created_at__gte }}">
+                    </label>
+                    <label class="form-label flex-fill me-2">Qeydiyyat tarixi (Son)
+                        <input class="form-control" type="date" name="created_at__lte"
+                               value="{{ request.GET.created_at__lte }}">
+                    </label>
+                </div>
+                <div class="d-flex mt-3">
+                    <button class="btn btn-primary btn-sm me-2" type="submit" title="Filterlə">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <a class="btn btn-secondary btn-sm me-2" href="{% url 'student:student_list' %}" title="Sıfırla">
+                        <i class="fas fa-redo-alt"></i> Sıfırla
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <h2 class="text-center text-dark mb-4">Şagird cədvəli</h2>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <button type="button" class="btn btn-success btn-sm mb-2" data-bs-toggle="modal"
+                            data-bs-target="#NewStudent">
+                        Yeni şagird
+                    </button>
+                    <a class="btn btn-primary btn-sm me-2 mb-2" role="button" data-bs-toggle="modal" data-bs-target="#exportModal"><i class="fas fa-file-excel"></i> Export</a>
+                    <p class="text-primary m-0 fw-bold">Şagird məlumatı</p>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-6 align-self-center">
+                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Şagird sayı: {{ student_count }} nəfər</p>
+                    </div>
+                    <div class="table-responsive table mt-2" id="dataTable-1" role="grid"
+                         aria-describedby="dataTable_info">
+                        <table class="table my-0" id="dataTable">
+                            <thead class="text-nowrap">
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>İş nömrə</th>
+                                <th>Ad</th>
+                                <th>Soyad</th>
+                                <th>Cins</th>
+                                <th>Növbə</th>
+                                <th>Sinif</th>
+                                <th>Qrup</th>
+                                <th>Sinif kodu</th>
+                                <th>Bölmə</th>
+                                <th>Qeydiyyat statusu</th>
+                                <th>Qeydiyyat növü</th>
+                                <th>Qeydiyyat tarixi</th>
+                                <th>Əməliyyatlar</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-nowrap">
+                            {% for student in students %}
+                            <tr class="text-center">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ student.work_number }}</td>
+                                <td>{{ student.first_name }}</td>
+                                <td>{{ student.last_name }}</td>
+                                <td>{{ student.get_gender_display }}</td>
+                                <td>{{ student.get_shift_display }}</td>
+                                <td>{{ student.student_class }}</td>
+                                <td>{{ student.group }}</td>
+                                <td>{{ student.class_number }}</td>
+                                <td>{{ student.get_section_display }}</td>
+                                {% if student.get_registration_status_display == 'Çıxıb' %}
+                                <td class="text-danger">{{ student.get_registration_status_display }}</td>
+                                {% else %}
+                                <td class="text-success">{{ student.get_registration_status_display }}</td>
+                                {% endif %}
+                                <td>{{ student.get_registration_type_display }}</td>
+                                <td>{{ student.created_at|date:'d.m.Y' }}</td>
+                                <td class="text-end">
+                                    <a class="btn btn-info btn-sm me-2" role="button" data-bs-toggle="tooltip"
+                                       data-bss-tooltip="" title="Redakte et" href="{% url 'student:update_student' student.id %}">
+                                        <i class="fas fa-pen-alt"></i>
+                                    </a>
+                                    {% if student.tuitionfeesplit_set.exists %}
+                                    <a class="btn btn-success btn-sm me-2" role="button" data-bs-toggle="tooltip"
+                                       data-bss-tooltip="" title="Ödəniş cədvəli"
+                                       href="{% url 'student:tuition_fee_split_detail' student.id %}">
+                                        <i class="fas fa-list"></i>
+                                    </a>
+                                    {% else %}
+                                    <a class="btn btn-warning btn-sm me-2" role="button" data-bs-toggle="tooltip"
+                                       data-bss-tooltip="" title="Ödənişlər"
+                                       href="{% url 'student:split_tuition_fee' student.id %}">
+                                        <i class="far fa-money-bill-alt"></i>
+                                    </a>
+                                    {% endif %}
+                                        <a href="{% url 'student:download_contract' student.id %}" class="btn btn-primary btn-sm me-2" data-bs-toggle="tooltip"
+                                           data-bss-tooltip="" type="button" title="Müqaviləni yüklə">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    <a href="{% url 'student:student_delete_confirm' student.id %}" class="btn btn-danger btn-sm me-2" data-bs-toggle="tooltip"
+                                       data-bss-tooltip="" type="button" title="Sil">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>İş nömrə</th>
+                                <th>Ad</th>
+                                <th>Soyad</th>
+                                <th>Cins</th>
+                                <th>Növbə</th>
+                                <th>Sinif</th>
+                                <th>Qrup</th>
+                                <th>Sinif kodu</th>
+                                <th>Bölmə</th>
+                                <th>Qeydiyyat statusu</th>
+                                <th>Qeydiyyat növü</th>
+                                <th>Qeydiyyat tarixi</th>
+                                <th>Əməliyyatlar</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="row">
+                        {% include 'accounting/inc/_pagination.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="NewStudent" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Qeydiyyat növünü seçin</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <a href="{% url 'student:add_student' %}" class="btn btn-success btn-sm">Yeni qeydiyyat</a>
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#RepeatRegistrationModal" data-bs-dismiss="modal">Təkrar qeydiyyat
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Repeat Registration -->
+<div class="modal fade" id="RepeatRegistrationModal" tabindex="-1" aria-labelledby="repeatRegistrationLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="repeatRegistrationLabel">Şagird axtarışı</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <form id="repeatRegistrationForm" method="get" action="{% url 'student:repeat_registration_search' %}">
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">Ad</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name">
+                </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Soyad</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name">
+                </div>
+                <div class="mb-3">
+                    <label for="work_number" class="form-label">İş nömrəsi</label>
+                    <input type="text" class="form-control" id="work_number" name="work_number">
+                </div>
+                <button type="submit" class="btn btn-primary" disabled>Axtar</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно -->
+<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exportModalLabel">Eksport etmək üçün sahələri seçin</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'student:export_students' %}">
+                {% csrf_token %}
+                {% for key, value in request.GET.items %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endfor %}
+                <div class="modal-body">
+                    <button type="button" class="btn btn-primary mb-3 btn-sm" id="select-all">Hamısını şeç</button>
+                    {% for field, display_name in fields %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ field }}" name="fields"
+                               id="field{{ forloop.counter }}">
+                        <label class="form-check-label" for="field{{ forloop.counter }}">
+                            {{ display_name }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Bağla</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Yüklə</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#class').select2({
+        placeholder: 'Sinif',
+        width: '100%'
+    });
+    $('#group').select2({
+        placeholder: 'Qrup',
+        width: '100%'
+    });
+});
+document.getElementById('select-all').addEventListener('click', function() {
+    var checkboxes = document.querySelectorAll('.modal-body .form-check-input');
+    var allChecked = Array.from(checkboxes).every(function(checkbox) {
+        return checkbox.checked;
+    });
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = !allChecked;
+    });
+
+    this.textContent = allChecked ? 'Hamısını şeç' : 'Bütün seçimləri ləğv et';
+});
+</script>
+{% endblock %}

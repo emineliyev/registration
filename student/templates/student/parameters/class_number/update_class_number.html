@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Sinif kodu redakte
+{% endblock %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>ŞAGİRD CƏDVƏLİ</span></a></li>
+        <li class="breadcrumb-item"><a href="{% url 'student:exam_list' %}"><span>SİNİF KODU CƏDVƏLİ</span></a>
+        </li>
+        <li class="breadcrumb-item text-secondary"><span>SİNİF KODU REDAKTE</span></li>
+    </ol>
+    <h2 class="text-center">Sinif kodu redakte</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="d-flex flex-column">
+                    <label class="form-label" for="{{ form.number.id_for_label }}">Sinif kodu
+                        {{ form.number }}
+                        <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                    </label>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-success btn-sm" type="submit">Yenilə</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

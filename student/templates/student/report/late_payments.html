@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Gecikən ödənişlər{% endblock %}
+{% block content %}
+<div class="container">
+    {% include 'accounting/inc/_messages.html' %}
+    <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>Şagird cədvəli</span></a></li>
+        <li class="breadcrumb-item text-secondary"><span>GECİKƏN ÖDƏNİŞLƏR</span></li>
+    </ol>
+    <h2 class="text-center text-dark mb-4">Axtarış filteri</h2>
+    <div class="row mb-3">
+        <div class="col">
+            <form method="get">
+                <div class="d-flex flex-wrap">
+                    <label class="form-label flex-fill me-2">Tədris ili
+                        <select class="form-select" name="year">
+                        {% for year in years %}
+                        <option value="{{ year.id }}" {% if year.id|stringformat:"s" == request.GET.year %}selected{% endif %}>{{ year.year }}</option>
+                        {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">İş nömrə
+                        <input class="form-control" type="number" name="work_number__icontains"
+                               value="{{ request.GET.work_number__icontains }}">
+                    </label>
+                    <label class="form-label flex-fill me-2">Ad
+                        <input class="form-control" type="text" name="first_name__icontains"
+                               value="{{ request.GET.first_name__icontains }}">
+                    </label>
+                    <label class="form-label flex-fill me-2">Soyad
+                        <input class="form-control" type="text" name="last_name__icontains"
+                               value="{{ request.GET.last_name__icontains }}">
+                    </label>
+                    <label class="form-label flex-fill me-2">Sinif
+                        <select class="form-select" id="class" name="student_class" multiple>
+                            <option value="">---------</option>
+                            {% for student_class in student_classes %}
+                            <option value="{{ student_class.id }}" {% if student_class.id|stringformat:"s" in request.GET.student_class %}selected{% endif %}>{{ student_class.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">Qrup
+                        <select class="form-select" id="group" name="group" multiple>
+                            <option value="">---------</option>
+                            {% for group in groups %}
+                            <option value="{{ group.id }}" {% if group.id|stringformat:"s" in request.GET.group %}selected{% endif %}>{{ group.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">Sinif kodу
+                        <select class="form-control" name="class_number">
+                            <option value="">---------</option>
+                            {% for class_number in class_numbers %}
+                            <option value="{{ class_number.id }}" {% if class_number.id|stringformat:"s" == request.GET.class_number %}selected{% endif %}>{{ class_number.number }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">Bölmə
+                        <select class="form-select" name="section">
+                            <option value="">---------</option>
+                            {% for section in sections %}
+                            <option value="{{ section.0 }}" {% if section.0 == request.GET.section %}selected{% endif %}>
+                                {{ section.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="form-label flex-fill me-2">Tarixdən
+                        <input class="form-control" type="date" name="overdue_date__gte"
+                               value="{{ request.GET.overdue_date__gte }}">
+                    </label>
+                    <label class="form-label flex-fill me-2">Tarixədək
+                        <input class="form-control" type="date" name="overdue_date__lte"
+                               value="{{ request.GET.overdue_date__lte }}">
+                    </label>
+                </div>
+                <div class="d-flex mt-3">
+                    <button class="btn btn-primary btn-sm me-2" type="submit" title="Filterlə">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <a class="btn btn-secondary btn-sm me-2" href="{% url 'student:late_payments' %}" title="Sıfırla">
+                        <i class="fas fa-redo-alt"></i> Sıfırla
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <h2 class="text-center text-dark mb-4">Gecikən ödənişlər</h2>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <a class="btn btn-primary btn-sm me-2 mb-2" href="{% url 'student:export_late_payments' %}?{% query_transform %}" role="button"><i class="fas fa-file-excel"></i> Export</a>
+
+                    <p class="text-primary m-0 fw-bold">Şagird məlumatı</p>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-6 align-self-center">
+                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Şagird sayı: {{ students|length }} nəfər</p>
+                    </div>
+                    <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+                        <table class="table my-0" id="dataTable">
+                            <thead class="text-nowrap">
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>İş nömrə</th>
+                                <th>Ad</th>
+                                <th>Soyad</th>
+                                <th>Sinif</th>
+                                <th>Qrup</th>
+                                <th>Sinif kodу</th>
+                                <th>Bölmə</th>
+                                <th>Məhsul şəxsin telefonu</th>
+                                <th>Ümumi məbləğ</th>
+                                <th>Ödənən məbləğ</th>
+                                <th>Gecikən məbləğ</th>
+                                <th>Gecikən taksit sayı</th>
+                                <th>Gecikən taksit tarixləri</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-nowrap">
+                            {% for student in students %}
+                            <tr class="text-center">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ student.work_number }}</td>
+                                <td>{{ student.first_name }}</td>
+                                <td>{{ student.last_name }}</td>
+                                <td>{{ student.student_class }}</td>
+                                <td>{{ student.group }}</td>
+                                <td>{{ student.class_number }}</td>
+                                <td>{{ student.get_section_display }}</td>
+                                <td>{{ student.responsible_phone_1 }}</td>
+                                <td>{{ student.annual_fee }} ₼</td>
+                                <td>{{ student.total_paid }} ₼</td>
+                                <td>{{ student.debt_amount }} ₼</td>
+                                <td>{{ student.debt_months }}</td>
+                                <td>{{ student.overdue_installment_dates }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th colspan="9" class="text-center text-danger">Cəmi</th>
+                                <th class="text-center text-danger">{{ total_annual_fee_sum }} ₼</th>
+                                <th class="text-center text-danger">{{ total_paid_sum }} ₼</th>
+                                <th class="text-center text-danger">{{ total_debt_amount_sum }} ₼</th>
+                                <th colspan="3"></th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="row">
+                        {% include 'accounting/inc/_pagination.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#class').select2({
+        placeholder: 'Sinif',
+        width: '100%'
+    });
+    $('#group').select2({
+        placeholder: 'Qrup',
+        width: '100%'
+    });
+});
+</script>
+{% endblock %}

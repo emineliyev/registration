@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Yeni müqavilə{% endblock %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>ŞAGİRD CƏDVƏLİ</span></a></li>
+        <li class="breadcrumb-item"><a href="{% url 'accounting:contract_list' %}"><span>MÜQAVİLƏLƏR</span></a>
+        </li>
+        <li class="breadcrumb-item text-secondary"><span>YENİ MÜQAVİLƏ</span></li>
+    </ol>
+    <h2 class="text-center">Yeni müqavilə</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="d-flex flex-column has-validation">
+                    <label class="form-label" for="{{ form.name.id_for_label }}">Müqavilə adı
+                        {{ form.name }}
+                        <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                    </label>
+                    <label class="form-label" for="{{ form.class_level.id_for_label }}">Siniflər
+                        {{ form.class_level }}
+                        <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                    </label>
+                    <label class="form-label" for="{{ form.file.id_for_label }}">Sənəd format word
+                        {{ form.file }}
+                        <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                    </label>
+                </div>
+                <button class="btn btn-success btn-sm" type="submit">Yüklə</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

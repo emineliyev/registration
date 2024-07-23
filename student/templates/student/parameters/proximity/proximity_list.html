@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Yaxınlıq cədvəli
+{% endblock %}
+{% block content %}
+<div class="container">
+    {% include 'accounting/inc/_messages.html' %}
+    <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>ŞAGİRD CƏDVƏLİ</span></a></li>
+        <li class="breadcrumb-item text-secondary"><span>YAXINLIQ CƏDVƏLİ</span></li>
+    </ol>
+    <h2 class="text-center">Yaxınlıq cədvəli</h2>
+    <div class="row">
+        <div class="col"><a class="btn btn-success btn-sm mb-2" role="button" href="{% url 'student:add_proximity' %}">Yeni yaxınlıq</a></div>
+        <div class="col-md-12">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <caption>Table Caption</caption>
+                    <thead class="text-nowrap text-bg-secondary">
+                    <tr>
+                        <th>#</th>
+                        <th>
+                            <span style="font-weight: normal !important; color: rgb(33, 37, 41); background-color: var(--bs-table-bg);">Yaxınlıq adı</span><br>
+                        </th>
+                        <th class="text-end">
+                            <span  style="font-weight: normal !important; color: rgb(33, 37, 41); background-color: var(--bs-table-bg);">Əməliyyatlar</span><br>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for proxi in proximity %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ proxi.name }}</td>
+                        <td class="text-end">
+                            <a href="{% url 'student:update_proximity' proxi.id %}" class="btn btn-primary btn-sm me-2" role="button" data-bs-toggle="tooltip" data-bss-tooltip="" title="Redakte et">
+                                <i class="fas fa-pen-alt"></i>
+                            </a>
+                            <a href="{% url 'student:delete_confirm_proximity' proxi.id %}" class="btn btn-danger btn-sm me-2" role="button" data-bs-toggle="tooltip" data-bss-tooltip="" title="Sil">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

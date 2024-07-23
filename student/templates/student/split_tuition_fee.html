@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Taksidlərə bölünmə
+{% endblock %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb text-white bg-secondary bg-gradient border-0">
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>ŞAGİRD CƏDVƏLİ</span></a></li>
+        <li class="breadcrumb-item"><a href="{% url 'student:student_list' %}"><span>ŞAGİRD CƏDVƏLİ</span></a>
+        <li class="breadcrumb-item text-secondary"><span>TƏHSİL HAQQININ BÖLÜNMƏSİ</span></li>
+    </ol>
+    <h2 class="text-center">{{ student.first_name }} {{ student.last_name }} <br> Təhsil haqqının bölünməsi</h2>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_start_date" class="form-label">İlkin ödəniş tarixi</label>
+                            {{ form.start_date }}
+                            <div class="invalid-feedback">Tarix seçin!</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_number_of_months" class="form-label">Taksit sayı</label>
+                            {{ form.number_of_months }}
+                            <div class="invalid-feedback">Bu sahə vacibdir!</div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-success btn-sm" type="submit">Yadda saxla</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
