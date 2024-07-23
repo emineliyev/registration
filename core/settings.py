@@ -12,10 +12,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 from decouple import config
-# import sys
-# DEBUG_TOOLBAR_CONFIG = {
-#     'SHOW_TOOLBAR_CALLBACK': lambda request: False,
-# }
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -42,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounting.apps.AccountingConfig',
     'student.apps.StudentConfig',
-    'debug_toolbar',
     'django_filters',
     'import_export',
 ]
@@ -55,18 +50,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    # DEBUG-TOOLBAR
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
-
-# if 'test' in sys.argv:
-#     print("Running tests, disabling debug toolbar")
-#     INSTALLED_APPS = [app for app in INSTALLED_APPS if app != 'debug_toolbar']
-#     MIDDLEWARE = [middleware for middleware in MIDDLEWARE if
-#                   middleware != 'debug_toolbar.middleware.DebugToolbarMiddleware']
 
 
 TEMPLATES = [
@@ -148,8 +134,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
